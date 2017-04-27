@@ -1,4 +1,13 @@
+const jwt = require('jwt-simple');
+
 const User = require('../models/user');
+const config = require('../config');
+
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+  // conventionally, jwt's have sub(ject) & iat (issued-at-time) properties
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
+}
 
 exports.signup = function(req, res, next) {
   const email = req.body.email;
@@ -30,8 +39,8 @@ exports.signup = function(req, res, next) {
         return next(err);
       }
 
-      // respond to req indicating user was created:
-      res.json({success: true});
+      // respond to req assigning token to user:
+      res.json({ token: tokenForUser(user) });
     });
   });
 }
