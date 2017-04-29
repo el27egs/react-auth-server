@@ -3,6 +3,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 const router = require('./router');
@@ -11,7 +12,8 @@ const router = require('./router');
 mongoose.connect('mongodb://localhost:auth/reactAuthServer');
 
 // app setup
-app.use(morgan('combined')); // 'morgan' is a logging framework
+app.use(morgan('combined'));
+app.use(cors());
 app.use(bodyParser.json({ type: '*/*' }));
 router(app);
 
